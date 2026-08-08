@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Borne de commande</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== ÉCRAN 0 : VEILLE ===== -->
+<section id="screen-idle" class="screen screen--idle active">
+  <div class="idle-bg"></div>
+  <div class="idle-content">
+    <div class="arch-logo" aria-hidden="true">
+      <svg viewBox="0 0 200 160" class="arch-svg">
+        <path d="M20 160 L20 90 Q20 20 60 20 Q80 20 80 60 L80 160 M120 160 L120 60 Q120 20 140 20 Q180 20 180 90 L180 160" />
+      </svg>
+    </div>
+    <h1 class="idle-title">Bienvenue</h1>
+    <p class="idle-sub">Touchez l'écran pour commencer votre commande</p>
+    <button class="btn-touch-start" id="btn-start">Commencer</button>
+  </div>
+</section>
+
+<!-- ===== ÉCRAN 1 : TYPE DE COMMANDE ===== -->
+<section id="screen-order-type" class="screen">
+  <header class="topbar">
+    <div class="progress-arch" data-step="1">
+      <span class="progress-step" data-label="Accueil"></span>
+      <span class="progress-step" data-label="Menu"></span>
+      <span class="progress-step" data-label="Panier"></span>
+      <span class="progress-step" data-label="Paiement"></span>
+    </div>
+  </header>
+  <div class="center-content">
+    <h2 class="screen-title">Comment souhaitez-vous être servi ?</h2>
+    <div class="choice-grid">
+      <button class="choice-card" data-order-type="sur-place">
+        <span class="choice-icon" aria-hidden="true">🍽️</span>
+        <span class="choice-label">Sur place</span>
+      </button>
+      <button class="choice-card" data-order-type="emporter">
+        <span class="choice-icon" aria-hidden="true">🥡</span>
+        <span class="choice-label">À emporter</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ÉCRAN 2 : MENU ===== -->
+<section id="screen-menu" class="screen">
+  <header class="topbar">
+    <div class="progress-arch" data-step="2">
+      <span class="progress-step" data-label="Accueil"></span>
+      <span class="progress-step" data-label="Menu"></span>
+      <span class="progress-step" data-label="Panier"></span>
+      <span class="progress-step" data-label="Paiement"></span>
+    </div>
+    <div class="topbar-info">
+      <span id="order-type-badge" class="order-type-badge"></span>
+    </div>
+  </header>
+
+  <div class="menu-layout">
+    <nav class="category-rail" id="category-rail" aria-label="Catégories"></nav>
+
+    <main class="product-area">
+      <h2 class="category-heading" id="category-heading">Menus</h2>
+      <div class="product-grid" id="product-grid"></div>
+    </main>
+  </div>
+
+  <button class="cart-fab" id="cart-fab">
+    <span class="cart-fab-icon" aria-hidden="true">🛒</span>
+    <span class="cart-fab-count" id="cart-fab-count">0</span>
+    <span class="cart-fab-total" id="cart-fab-total">0,00&nbsp;€</span>
+  </button>
+</section>
+
+<!-- ===== MODALE PRODUIT ===== -->
+<div class="modal-overlay" id="product-modal-overlay">
+  <div class="product-modal" id="product-modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="product-modal-close" aria-label="Fermer">✕</button>
+    <div class="product-modal-image-wrap">
+      <img id="product-modal-image" class="product-modal-image" alt="">
+    </div>
+    <div class="product-modal-body">
+      <h3 id="product-modal-name" class="product-modal-name"></h3>
+      <p id="product-modal-desc" class="product-modal-desc"></p>
+
+      <div class="option-group" id="option-formule-wrap">
+        <span class="option-group-label">Formule</span>
+        <div class="option-pills" id="option-formule"></div>
+      </div>
+
+      <div class="option-group" id="option-taille-wrap">
+        <span class="option-group-label">Taille</span>
+        <div class="option-pills" id="option-taille"></div>
+      </div>
+
+      <div class="option-group" id="option-extras-wrap">
+        <span class="option-group-label">Suppléments</span>
+        <div class="option-pills option-pills--multi" id="option-extras"></div>
+      </div>
+
+      <div class="qty-row">
+        <span class="option-group-label">Quantité</span>
+        <div class="qty-control">
+          <button class="qty-btn" id="qty-minus" aria-label="Diminuer">–</button>
+          <span class="qty-value" id="qty-value">1</span>
+          <button class="qty-btn" id="qty-plus" aria-label="Augmenter">+</button>
+        </div>
+      </div>
+    </div>
+    <footer class="product-modal-footer">
+      <span class="product-modal-price" id="product-modal-price">0,00 €</span>
+      <button class="btn-primary" id="add-to-cart-btn">Ajouter au panier</button>
+    </footer>
+  </div>
+</div>
+
+<!-- ===== PANNEAU PANIER ===== -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<aside class="cart-panel" id="cart-panel">
+  <header class="cart-panel-header">
+    <h2>Votre commande</h2>
+    <button class="modal-close" id="cart-close" aria-label="Fermer">✕</button>
+  </header>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-empty" id="cart-empty">
+    <span aria-hidden="true">🛒</span>
+    <p>Votre panier est vide</p>
+  </div>
+  <footer class="cart-panel-footer">
+    <div class="cart-line"><span>Sous-total</span><span id="cart-subtotal">0,00 €</span></div>
+    <div class="cart-line cart-line--total"><span>Total</span><span id="cart-total">0,00 €</span></div>
+    <button class="btn-primary btn-full" id="go-to-payment">Passer au paiement</button>
+  </footer>
+</aside>
+
+<!-- ===== ÉCRAN 3 : PAIEMENT ===== -->
+<section id="screen-payment" class="screen">
+  <header class="topbar">
+    <div class="progress-arch" data-step="3">
+      <span class="progress-step" data-label="Accueil"></span>
+      <span class="progress-step" data-label="Menu"></span>
+      <span class="progress-step" data-label="Panier"></span>
+      <span class="progress-step" data-label="Paiement"></span>
+    </div>
+  </header>
+  <div class="center-content">
+    <h2 class="screen-title">Choisissez votre mode de paiement</h2>
+    <p class="payment-total" id="payment-total-display">0,00 €</p>
+    <div class="choice-grid choice-grid--three">
+      <button class="choice-card" data-payment="carte">
+        <span class="choice-icon" aria-hidden="true">💳</span>
+        <span class="choice-label">Carte bancaire</span>
+      </button>
+      <button class="choice-card" data-payment="sans-contact">
+        <span class="choice-icon" aria-hidden="true">📶</span>
+        <span class="choice-label">Sans contact</span>
+      </button>
+      <button class="choice-card" data-payment="especes">
+        <span class="choice-icon" aria-hidden="true">💶</span>
+        <span class="choice-label">Espèces en caisse</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ÉCRAN 4 : TRAITEMENT ===== -->
+<section id="screen-processing" class="screen">
+  <div class="center-content">
+    <div class="spinner" aria-hidden="true"></div>
+    <h2 class="screen-title" id="processing-title">Paiement en cours…</h2>
+    <p class="idle-sub">Merci de patienter</p>
+  </div>
+</section>
+
+<!-- ===== ÉCRAN 5 : CONFIRMATION ===== -->
+<section id="screen-confirm" class="screen">
+  <div class="center-content">
+    <div class="confirm-check" aria-hidden="true">✓</div>
+    <h2 class="screen-title">Commande confirmée</h2>
+    <p class="idle-sub">Votre numéro de commande</p>
+    <p class="order-number" id="order-number">000</p>
+    <p class="order-note" id="order-note">Rendez-vous en caisse pour récupérer votre commande.</p>
+    <button class="btn-touch-start" id="btn-new-order">Nouvelle commande</button>
+  </div>
+</section>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/drive.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
